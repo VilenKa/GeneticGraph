@@ -128,16 +128,37 @@ fun crossoverAllAnimals(animals: ArrayList<ArrayList<Graph.Vertex>>){
     }
 }
 
-fun crossoverTwoAnimals(alpha: ArrayList<Graph.Vertex>, notAlpha: ArrayList<Graph.Vertex>){
-    var alphaGenes = ArrayList<Graph.Vertex>()
-    if(alpha.size % 2 == 0){
-        for(i in 0 until alpha.size/2){
-            alphaGenes.add(alpha[i])
+fun crossoverTwoAnimals(alpha: ArrayList<Graph.Vertex>, notAlpha: ArrayList<Graph.Vertex>): ArrayList<Graph.Vertex>?{
+    var leftCommon = Graph.Vertex("")
+    var rightCommon = Graph.Vertex("")
+    for(i in 1 until alpha.lastIndex){
+        for(j in 1 until notAlpha.lastIndex){
+            if( alpha[i] == notAlpha[j]){
+                rightCommon = alpha[i]
+            }
         }
     }
-    if(!notAlpha.contains(alphaGenes[alphaGenes.lastIndex])){
-
+    for(i in alpha.lastIndex-1..1){
+        for(j in notAlpha.lastIndex-1..1){
+            if(alpha[i] == notAlpha[j]){
+                rightCommon = alpha[i]
+            }
+        }
     }
+    if((alpha.indexOf(leftCommon)-alpha.indexOf(rightCommon)>1 &&
+                (notAlpha.indexOf(leftCommon) - notAlpha.indexOf(rightCommon))>1 &&
+                leftCommon != Graph.Vertex("") && rightCommon != Graph.Vertex(""))){
+        var alphaBuffer = ArrayList<Graph.Vertex>()
+        for(i in alpha.indexOf(leftCommon)+1..alpha.indexOf(rightCommon)-1){
+            alphaBuffer.add(alpha[i])
+        }
+        for(i in notAlpha.indexOf(leftCommon)+1..notAlpha.indexOf(rightCommon)-1){
+            notAlpha.removeAt(i)
+        }
+        notAlpha.addAll(notAlpha.indexOf(leftCommon), alphaBuffer)
+        return notAlpha
+    }
+    return null
 }
 
 class Graph {
